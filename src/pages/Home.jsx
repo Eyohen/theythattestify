@@ -1210,15 +1210,13 @@ const Home = () => {
                 )}
               </div>
 
-              <a
-                href="https://forms.gle/jvRVLqxBFS6AW7zq6"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+              to="/share-testimony"
                 className="group inline-flex items-center gap-3 bg-amber-400 hover:bg-amber-500 text-black px-10 py-4 rounded-none text-lg font-medium transition-all duration-300"
               >
-                Open Testimony Form
+                Share your testimony
                 <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
