@@ -17,6 +17,7 @@ import AdminTestimonies from './pages/admin/Testimonies';
 import AdminUsers from './pages/admin/Users';
 import AdminSettings from './pages/admin/Settings';
 import TestimonyDetail from './pages/TestimonyDetail';
+import ShareTestimony from './pages/ShareTestimony';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, adminOnly = false }) => {
@@ -37,10 +38,10 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   return children;
 };
 
-const AdminRoute = ({children}) => {
-  const {isAuthenticated, isAdmin, loading} = useAuth();
+const AdminRoute = ({ children }) => {
+  const { isAuthenticated, isAdmin, loading } = useAuth();
 
-  if(loading){
+  if (loading) {
     return (
       <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
         <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-red-600'></div>
@@ -48,19 +49,19 @@ const AdminRoute = ({children}) => {
     );
   }
 
-if(!isAuthenticated){
-  return <Navigate to="/admin/login" replace/>;
-}
+  if (!isAuthenticated) {
+    return <Navigate to="/admin/login" replace />;
+  }
 
-if(!isAdmin){
-  return <Navigate to="/" replace/>;
-}
+  if (!isAdmin) {
+    return <Navigate to="/" replace />;
+  }
 
-return (
-  <DashboardLayout>
-    {children}
-  </DashboardLayout>
-);
+  return (
+    <DashboardLayout>
+      {children}
+    </DashboardLayout>
+  );
 };
 
 // Redirect authenticated users from login pages
@@ -115,6 +116,13 @@ function App() {
             </RedirectIfAuthenticated>
           }
         />
+
+
+        <Route path="/share-testimony" element={
+          <ProtectedRoute>
+            <ShareTestimony />
+          </ProtectedRoute>
+        } />
 
 
         {/* Admin Authentication Route */}

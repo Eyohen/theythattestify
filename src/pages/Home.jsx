@@ -1414,12 +1414,13 @@ const Home = () => {
                 : 'Share your testimony to inspire others with God\'s goodness in your life.'
               }
             </p>
-            <button
-              onClick={() => setCurrentPage('share')}
+            <Link
+              // onClick={() => setCurrentPage('share')}
+              to="/share-testimony"
               className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-none font-light transition-colors"
             >
               Share Your Story
-            </button>
+            </Link>
           </div>
         </div>
       </section>
