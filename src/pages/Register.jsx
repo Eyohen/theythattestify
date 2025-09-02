@@ -32,11 +32,11 @@ const Register = () => {
   const { register, loading, error, clearError, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/', { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     navigate('/', { replace: true });
+  //   }
+  // }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     clearError();

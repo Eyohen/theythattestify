@@ -97,10 +97,10 @@ function App() {
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/testimony/:id" element={<TestimonyDetail />} />
-        {/* <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} /> */}
+        <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
         {/* User Authentication Routes */}
-        <Route
+        {/* <Route
           path="/login"
           element={
             <RedirectIfAuthenticated>
@@ -115,7 +115,7 @@ function App() {
               <Register />
             </RedirectIfAuthenticated>
           }
-        />
+        /> */}
 
 
         <Route path="/share-testimony" element={
@@ -126,12 +126,21 @@ function App() {
 
 
         {/* Admin Authentication Route */}
-        <Route
+        {/* <Route
           path="/admin/login"
           element={
             <RedirectIfAuthenticated adminPage={true}>
               <AdminLogin />
             </RedirectIfAuthenticated>
+          }
+        /> */}
+
+             <Route
+          path="/admin/login"
+          element={
+   
+              <AdminLogin />
+         
           }
         />
 

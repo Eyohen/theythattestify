@@ -17,11 +17,11 @@ const Login = () => {
 
   const from = location.state?.from?.pathname || '/';
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate(from, { replace: true });
-    }
-  }, [isAuthenticated, navigate, from]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     navigate(from, { replace: true });
+  //   }
+  // }, [isAuthenticated, navigate, from]);
 
   useEffect(() => {
     clearError();

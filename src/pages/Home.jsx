@@ -933,16 +933,36 @@ const Home = () => {
                 {item.name}
               </button>
             ))}
+
+            {/* Login Link */}
+            <div className="hidden md:flex items-center">
+              <a
+                href="/login"
+                className="text-white/80 hover:text-amber-400 transition-colors text-sm font-light tracking-wide px-4 py-2 border border-white/20 rounded-full hover:border-amber-400/40"
+              >
+                Login
+              </a>
+            </div>
+
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center space-x-3">
+              <a 
+              href="/login" 
+              className="text-white/80 hover:text-amber-400 transition-colors text-sm font-light tracking-wide px-3 py-1.5 border border-white/20 rounded-full hover:border-amber-400/40"
+            >
+              Login
+            </a>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-white/80 hover:text-white transition-colors"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
+
+            
+         
           </div>
         </div>
       </div>
@@ -1211,7 +1231,7 @@ const Home = () => {
               </div>
 
               <Link
-              to="/share-testimony"
+                to="/share-testimony"
                 className="group inline-flex items-center gap-3 bg-amber-400 hover:bg-amber-500 text-black px-10 py-4 rounded-none text-lg font-medium transition-all duration-300"
               >
                 Share your testimony
@@ -1313,9 +1333,9 @@ const Home = () => {
                         {featuredTestimonies[0].viewCount || 0} views
                       </span>
                     </div>
-                    <Link 
-                    to={`/testimony/${featuredTestimonies[0].id}`}
-                    className="group inline-flex items-center gap-3 bg-amber-400 hover:bg-amber-500 text-black px-8 py-3 rounded-none font-medium transition-all duration-300">
+                    <Link
+                      to={`/testimony/${featuredTestimonies[0].id}`}
+                      className="group inline-flex items-center gap-3 bg-amber-400 hover:bg-amber-500 text-black px-8 py-3 rounded-none font-medium transition-all duration-300">
                       {featuredTestimonies[0].type === 'video' ? 'Watch Now' : 'Read Story'}
                       {featuredTestimonies[0].type === 'video' ? (
                         <Play className="group-hover:scale-110 transition-transform" size={16} />
