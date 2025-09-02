@@ -1,410 +1,213 @@
-// import React, { useState } from 'react';
-// import { Link, useNavigate } from 'react-router-dom';
-// import {
-//   RiMailLine,
-//   RiLockLine,
-//   RiEyeLine,
-//   RiEyeOffLine,
-//   RiErrorWarningLine
-// } from 'react-icons/ri';
-// import axios from 'axios';
-// import { URL } from '../url';
-// import { useAuth } from '../context/AuthContext';
-// import authpic from '../assets/authpic.png'
-// import logo from '../assets/logo.png';
-// import { LuUserRoundPlus } from "react-icons/lu";
-
-
-// const Login = () => {
-//   const navigate = useNavigate();
-//   const { login } = useAuth();
-//   const [formData, setFormData] = useState({
-//     email: '',
-//     password: '',
-//     rememberMe: false
-//   });
-
-//   const [showPassword, setShowPassword] = useState(false);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [error, setError] = useState('');
-
-
-//   const [selectedRole, setSelectedRole] = useState('');
-
-//   const roles = [
-//     { id: 'user', label: 'User' },
-//     { id: 'facility-owner', label: 'Facility Owner' },
-//     { id: 'coach', label: 'Coach' }
-//   ];
-
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-//     setFormData(prev => ({
-//       ...prev,
-//       [name]: type === 'checkbox' ? checked : value
-//     }));
-//     setError(''); // Clear error when user types
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     // Basic validation
-//     if (!formData.email || !formData.password) {
-//       setError('Please fill in all fields');
-//       return;
-//     }
-
-//     setIsLoading(true);
-//     try {
-//       // Add your login API call here
-//       const res = await axios.post(`${URL}/api/merchants/login`, formData, {
-//         timeout: 50000,
-//       });
-
-//       const { token, merchant } = res.data;
-
-//       if (res.status === 200) {
-//         localStorage.setItem("access_token", token)
-//         login(merchant)
-//         setError(false)
-//         console.log(res.data)
-//         navigate("/dashboard")
-//       }
-
-//     } catch (err) {
-//       setError('Invalid email or password');
-//       console.error('Login error:', err);
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-
-//       {/* <div className="w-48 h-24 bg-gray-100 rounded-3xl border-r-4 border-b-4 border-black">
- 
-// </div> */}
-
-//       <div className='flex justify-center gap-x-32'>
-
-    
-//         <div>
-//           <div className="sm:mx-auto sm:w-full sm:max-w-md w-full">
-//             {/* Logo placeholder */}
-//             <div className="mx-auto flex items-center">
-//               <span className="text-white"><img src={logo} className='w-36 object-cover' /></span>
-//             </div>
-
-
-//             <div className='bg-yellow-400 w-[75px] h-[75px] rounded-full flex justify-center items-center border border-black border-r-4 border-b-4 mt-9'><div className='bg-white w-[40px] h-[40px] rounded-full flex justify-center items-center border border-black'><LuUserRoundPlus /></div></div>
-      
-
-
-//             <h2 className="mt-4 text-3xl font-semibold text-gray-900">
-//             Admin Login
-//             </h2>
-//             <p className="mt-1 text-sm text-gray-600 font-medium">
-//               Login into your admin account
-//             </p>
-//           </div>
-
-//           <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-      
-
-//               <form className="space-y-6" onSubmit={handleSubmit}>
-
-
-//                 {/* Email Field */}
-//                 <div>
-//                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-//                     Email address
-//                   </label>
-//                   <div className="mt-1 relative rounded-md shadow-sm">
-//                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-//                       <RiMailLine className="h-5 w-5 text-gray-400" />
-//                     </div>
-//                     <input
-//                       id="email"
-//                       name="email"
-//                       type="email"
-//                       autoComplete="email"
-//                       required
-//                       value={formData.email}
-//                       onChange={handleChange}
-//                       className="block w-[400px] pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-//                       placeholder="Enter your email"
-//                     />
-//                   </div>
-//                 </div>
-
-//                 {/* Password Field */}
-//                 <div>
-//                   <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-//                     Password
-//                   </label>
-//                   <div className="mt-1 relative rounded-md shadow-sm">
-//                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-//                       <RiLockLine className="h-5 w-5 text-gray-400" />
-//                     </div>
-//                     <input
-//                       id="password"
-//                       name="password"
-//                       type={showPassword ? "text" : "password"}
-//                       autoComplete="current-password"
-//                       required
-//                       value={formData.password}
-//                       onChange={handleChange}
-//                       className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-//                       placeholder="Enter your password"
-//                     />
-//                     <button
-//                       type="button"
-//                       className="absolute inset-y-0 right-0 pr-3 flex items-center"
-//                       onClick={() => setShowPassword(!showPassword)}
-//                     >
-//                       {showPassword ? (
-//                         <RiEyeOffLine className="h-5 w-5 text-gray-400 hover:text-gray-500" />
-//                       ) : (
-//                         <RiEyeLine className="h-5 w-5 text-gray-400 hover:text-gray-500" />
-//                       )}
-//                     </button>
-//                   </div>
-//                 </div>
-
-
-//                 {/* Submit Button */}
-//                 <div>
-//                   <button
-//                     type="submit"
-//                     disabled={isLoading}
-//                     className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
-//                       }`}
-//                   >
-//                     {isLoading ? 'Logging in...' : 'Login'}
-//                   </button>
-//                 </div>
-
-
-//                 {/* Dont have an account */}
-//                 <p className="mt-2 text-center text-sm text-gray-600">
-//                   Don't have an account?{' '}
-//                   <Link to="/register" className="font-medium text-purple-400 hover:text-blue-500">
-//                     Sign Up
-//                   </Link>
-//                 </p>
-
-//               </form>
-
- 
-//           </div>
-
-
-//         </div>
-
-//     <img src={authpic} className='w-[750px] h-[650px] object-cover rounded-3xl hidden md:block' />
-
-
-
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Login;
-
-
-
-
-
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  RiMailLine,
-  RiLockLine,
-  RiEyeLine,
-  RiEyeOffLine,
-  RiErrorWarningLine
-} from 'react-icons/ri';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import authpic from '../assets/authpic.png'
-import logo from '../assets/logo.png';
-import { LuUserRoundPlus } from "react-icons/lu";
+import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 
 const Login = () => {
-  const navigate = useNavigate();
-  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false
   });
-
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  
+  const { login, loading, error, clearError, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const from = location.state?.from?.pathname || '/';
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
+
+  useEffect(() => {
+    clearError();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
-    setError(''); // Clear error when user types
+    clearError();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Basic validation
+    
     if (!formData.email || !formData.password) {
-      setError('Please fill in all fields');
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const result = await login(formData.email, formData.password);
-
-      if (result.success) {
-        console.log('Login successful:', result.data);
-        navigate("/dashboard");
-      } else {
-        setError(result.message || 'Invalid email or password');
-      }
-    } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
-      console.error('Login error:', err);
-    } finally {
-      setIsLoading(false);
+    const result = await login(formData.email, formData.password);
+    
+    if (result.success) {
+      navigate(from, { replace: true });
     }
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className='flex justify-center gap-x-32'>
-        <div>
-          <div className="sm:mx-auto sm:w-full sm:max-w-md w-full">
-            {/* Logo placeholder */}
-            <div className="mx-auto flex items-center">
-              <span className="text-white"><img src={logo} className='w-36 object-cover' /></span>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-amber-400 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
+      </div>
 
-            <div className='bg-yellow-400 w-[75px] h-[75px] rounded-full flex justify-center items-center border border-black border-r-4 border-b-4 mt-9'>
-              <div className='bg-white w-[40px] h-[40px] rounded-full flex justify-center items-center border border-black'>
-                <LuUserRoundPlus />
-              </div>
-            </div>
+      <div className="relative max-w-md w-full space-y-8">
+        {/* Header */}
+        <div className="text-center">
+          <Link to="/" className="inline-block">
+            <h1 className="text-3xl font-light text-white tracking-wider mb-2">
+              <span className="font-bold">They</span>ThatTestify
+            </h1>
+          </Link>
+          <p className="text-white/70 text-lg">Welcome back</p>
+        </div>
 
-            <h2 className="mt-4 text-3xl font-semibold text-gray-900">
-              Admin Login
-            </h2>
-            <p className="mt-1 text-sm text-gray-600 font-medium">
-              Login into your admin account
-            </p>
+        {/* Success Message */}
+        {location.state?.message && (
+          <div className="bg-green-900/50 border border-green-400 text-green-200 px-4 py-3 rounded-lg flex items-center gap-3">
+            <CheckCircle size={20} />
+            <span className="text-sm">{location.state.message}</span>
           </div>
+        )}
 
-          <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              {/* Error Display */}
-              {error && (
-                <div className="bg-red-50 border border-red-200 rounded-md p-3 flex items-center">
-                  <RiErrorWarningLine className="h-5 w-5 text-red-400 mr-2" />
-                  <span className="text-sm text-red-700">{error}</span>
-                </div>
-              )}
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-900/50 border border-red-400 text-red-200 px-4 py-3 rounded-lg flex items-center gap-3">
+            <AlertCircle size={20} />
+            <span className="text-sm">{error}</span>
+          </div>
+        )}
 
-              {/* Email Field */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email address
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <RiMailLine className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="block w-[400px] pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Enter your email"
-                  />
+        {/* Login Form */}
+        <div className="bg-white/10 backdrop-blur-lg rounded-lg shadow-xl p-8 border border-white/20">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Email */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-white/50" />
                 </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="block w-full pl-10 pr-3 py-3 border border-white/20 rounded-lg bg-white/5 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+                  placeholder="Enter your email"
+                />
               </div>
+            </div>
 
-              {/* Password Field */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <RiLockLine className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    required
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Enter your password"
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <RiEyeOffLine className="h-5 w-5 text-gray-400 hover:text-gray-500" />
-                    ) : (
-                      <RiEyeLine className="h-5 w-5 text-gray-400 hover:text-gray-500" />
-                    )}
-                  </button>
+            {/* Password */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-white/80 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-white/50" />
                 </div>
-              </div>
-
-              {/* Submit Button */}
-              <div>
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  required
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="block w-full pl-10 pr-12 py-3 border border-white/20 rounded-lg bg-white/5 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+                  placeholder="Enter your password"
+                />
                 <button
-                  type="submit"
-                  disabled={isLoading}
-                  className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-                    isLoading 
-                      ? 'bg-gray-400 cursor-not-allowed' 
-                      : 'bg-[#7042D2] hover:bg-[#5a2eb8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7042D2]'
-                  }`}
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
                 >
-                  {isLoading ? (
-                    <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Logging in...
-                    </div>
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-white/50 hover:text-white/70" />
                   ) : (
-                    'Login'
+                    <Eye className="h-5 w-5 text-white/50 hover:text-white/70" />
                   )}
                 </button>
               </div>
+            </div>
 
-              {/* Forgot Password */}
-              <div className="text-center">
-                <Link to="/forgot-password" className="text-sm text-[#7042D2] hover:text-[#5a2eb8]">
-                  Forgot your password?
+            {/* Remember Me & Forgot Password */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 text-amber-400 focus:ring-amber-400 border-white/30 rounded bg-white/10"
+                />
+                <label htmlFor="remember-me" className="ml-2 text-sm text-white/70">
+                  Remember me
+                </label>
+              </div>
+
+              <div className="text-sm">
+                <Link
+                  to="/forgot-password"
+                  className="text-amber-400 hover:text-amber-300 transition-colors"
+                >
+                  Forgot password?
                 </Link>
               </div>
-            </form>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading || !formData.email || !formData.password}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-black bg-amber-400 hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium"
+            >
+              {loading ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
+              ) : (
+                <>
+                  Sign in
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Register Link */}
+          <div className="mt-6 text-center">
+            <p className="text-white/60 text-sm">
+              Don't have an account?{' '}
+              <Link
+                to="/register"
+                className="text-amber-400 hover:text-amber-300 font-medium transition-colors"
+              >
+                Create one here
+              </Link>
+            </p>
           </div>
         </div>
 
-        <img src={authpic} className='w-[750px] h-[650px] object-cover rounded-3xl hidden md:block' />
+        {/* Footer */}
+        <div className="text-center">
+          <p className="text-white/40 text-xs">
+            By signing in, you agree to share your testimony and help us reach 1 million testimonies
+          </p>
+        </div>
       </div>
     </div>
   );

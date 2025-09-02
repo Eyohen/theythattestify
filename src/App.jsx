@@ -1,119 +1,166 @@
-// App.jsx - for admin frontend
-import { Routes, Route } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import NotFoundPage from './pages/NotFoundPage';
-
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import 'coinley-checkout/dist/style.css'
 
+// Pages
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-import DashboardLayout from './components/dashboard/DashboardLayout';
-import Explore from './pages/Explore';
-import Bookings from './pages/Second';
-import Teams from './pages/Teams';
-import Community from './pages/Community';
-import Profile from './pages/Profile';
-import CreateTeam from './pages/CreateTeam';
-import Dashboard from './pages/Dashboard';
-import Users from './pages/Users';
-import Sessions from './pages/Sessions';
-import FinOversight from './pages/FinOversight';
-import DisputeResolution from './pages/DisputeResolution';
-import HomePage from './pages/HomePage';
-import Second from './pages/Second';
+
+// Admin Pages
+import AdminLogin from './pages/admin/AdminLogin';
+import DashboardLayout from './components/DashboardLayout';
+import AdminDashboard from './pages/admin/Dashboard';
+import AdminTestimonies from './pages/admin/Testimonies';
+import AdminUsers from './pages/admin/Users';
+import AdminSettings from './pages/admin/Settings';
+import TestimonyDetail from './pages/TestimonyDetail';
+
+// Protected Route Component
+const ProtectedRoute = ({ children, adminOnly = false }) => {
+  const { isAuthenticated, isAdmin, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+const AdminRoute = ({children}) => {
+  const {isAuthenticated, isAdmin, loading} = useAuth();
+
+  if(loading){
+    return (
+      <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
+        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-red-600'></div>
+      </div>
+    );
+  }
+
+if(!isAuthenticated){
+  return <Navigate to="/admin/login" replace/>;
+}
+
+if(!isAdmin){
+  return <Navigate to="/" replace/>;
+}
+
+return (
+  <DashboardLayout>
+    {children}
+  </DashboardLayout>
+);
+};
+
+// Redirect authenticated users from login pages
+const RedirectIfAuthenticated = ({ children, adminPage = false }) => {
+  const { isAuthenticated, isAdmin, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    if (adminPage && isAdmin) {
+      return <Navigate to="/admin/dashboard" replace />;
+    } else if (!adminPage) {
+      return <Navigate to="/" replace />;
+    }
+  }
+
+  return children;
+};
 
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
-
-      <main className="flex-grow">
-        <Routes>
-
-          <Route path="/" element={<HomePage />} />
-          <Route path="/second" element={<Second />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="*" element={<NotFoundPage />} />
 
 
+    <div className="App">
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/testimony/:id" element={<TestimonyDetail />} />
+        {/* <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} /> */}
+        {/* User Authentication Routes */}
+        <Route
+          path="/login"
+          element={
+            <RedirectIfAuthenticated>
+              <Login />
+            </RedirectIfAuthenticated>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <RedirectIfAuthenticated>
+              <Register />
+            </RedirectIfAuthenticated>
+          }
+        />
 
-          {/* 
-            Protected routes with dashboard layout  */}
-          <Route path="/dashboard" element={
-            <DashboardLayout>
-              <Dashboard />
-            </DashboardLayout>
-          } />
 
-          <Route path="/users" element={
-            <DashboardLayout>
-              <Users />
-            </DashboardLayout>
-          } />
+        {/* Admin Authentication Route */}
+        <Route
+          path="/admin/login"
+          element={
+            <RedirectIfAuthenticated adminPage={true}>
+              <AdminLogin />
+            </RedirectIfAuthenticated>
+          }
+        />
 
-          <Route path="/sessions" element={
-            <DashboardLayout>
-              <Sessions />
-            </DashboardLayout>
-          } />
 
-          <Route path="/explore" element={
-            <DashboardLayout>
-              <Explore />
-            </DashboardLayout>
-          } />
 
-          <Route path="/bookings" element={
-            <DashboardLayout>
-              <Bookings />
-            </DashboardLayout>
-          } />
+        {/* Admin Routes */}
+        <Route path="/admin/dashboard" element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        } />
+        <Route path="/admin/testimonies" element={
+          <AdminRoute>
+            <AdminTestimonies />
+          </AdminRoute>
+        } />
+        <Route path="/admin/users" element={
+          <AdminRoute>
+            <AdminUsers />
+          </AdminRoute>
+        } />
+        <Route path="/admin/settings" element={
+          <AdminRoute>
+            <AdminSettings />
+          </AdminRoute>
+        } />
 
-          <Route path="/teams" element={
-            <DashboardLayout>
-              <Teams />
-            </DashboardLayout>
-          } />
+        {/* Redirect /admin to /admin/dashboard */}
+        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
 
-          <Route path="/create-team" element={
-            <DashboardLayout>
-              <CreateTeam />
-            </DashboardLayout>
-          } />
-
-          <Route path="/communities" element={
-            <DashboardLayout>
-              <Community />
-            </DashboardLayout>
-          } />
-
-          <Route path="/financial-oversight" element={
-            <DashboardLayout>
-              <FinOversight />
-            </DashboardLayout>
-          } />
-
-          <Route path="/dispute-resolution" element={
-            <DashboardLayout>
-              <DisputeResolution />
-            </DashboardLayout>
-          } />
-
-          <Route path="/profile" element={
-            <DashboardLayout>
-              <Profile />
-            </DashboardLayout>
-          } />
-
-        </Routes>
-      </main>
-
+        {/* Catch all route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </div>
+
 
   );
 }
 
 export default App;
-
-
