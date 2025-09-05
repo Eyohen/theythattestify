@@ -14,13 +14,13 @@ const AdminLogin = () => {
   const { login, loading, error, clearError, isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isAuthenticated && isAdmin) {
-      navigate('/admin/dashboard', { replace: true });
-    } else if (isAuthenticated && !isAdmin) {
-      navigate('/', { replace: true });
-    }
-  }, [isAuthenticated, isAdmin, navigate]);
+//   useEffect(() => {
+//     if (isAuthenticated && isAdmin) {
+//       navigate('/admin/dashboard', { replace: true });
+//     } else if (isAuthenticated && !isAdmin) {
+//       navigate('/', { replace: true });
+//     }
+//   }, [isAuthenticated, isAdmin, navigate]);
 
   useEffect(() => {
     clearError();

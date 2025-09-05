@@ -53,9 +53,9 @@ const AdminRoute = ({ children }) => {
     return <Navigate to="/admin/login" replace />;
   }
 
-  if (!isAdmin) {
-    return <Navigate to="/" replace />;
-  }
+  // if (!isAdmin) {
+  //   return <Navigate to="/" replace />;
+  // }
 
   return (
     <DashboardLayout>
